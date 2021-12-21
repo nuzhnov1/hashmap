@@ -2,6 +2,8 @@
 #define _HASHTABLE_
 
 
+#include <iostream>
+#include <ostream>
 #include <vector>
 #include <forward_list>
 #include <initializer_list>
@@ -27,89 +29,40 @@ template
 class HashTable
 {
 public:
-    // TODO: rename alliases of types. Add "_" prefix
-    using key_t         = _Key;
-    using mapped_t      = _Data;
-    using value_t       = std::pair<const key_t, mapped_t>;
-    using hasher_t      = _Hasher;
-    using key_equal_t   = _KeyEqual;
-    using allocator_t   = _Allocator;
+    using _key_t         = _Key;
+    using _mapped_t      = _Data;
+    using _value_t       = std::pair<const _key_t, _mapped_t>;
+    using _hasher_t      = _Hasher;
+    using _key_equal_t   = _KeyEqual;
+    using _allocator_t   = _Allocator;
 
 private:
-    using _bucket_t = std::forward_list<value_t, allocator_t>;
-    
+    using _bucket_t = std::forward_list<_value_t, _allocator_t>;
+    using _table_iterator        
+        = typename std::vector<_bucket_t>::iterator;
+    using _const_table_iterator  
+        = typename std::vector<_bucket_t>::const_iterator;
+
 public:
     class iterator;
     class const_iterator;
-    using bucket_iterator       = _bucket_t::iterator;
-    using const_bucket_iterator = _bucket_t::const_iterator;
+    using bucket_iterator       = typename _bucket_t::iterator;
+    using const_bucket_iterator = typename _bucket_t::const_iterator;
 
 private:
-    constexpr size_t DEFAULT_COUNT_BUCKETS  = 16;
-    constexpr float DEFAULT_MAX_LOAD_FACTOR = 1.0f;
+    static constexpr size_t DEFAULT_COUNT_BUCKETS  = 16;
+    static constexpr float DEFAULT_MAX_LOAD_FACTOR = 1.0f;
     
     std::vector<_bucket_t> _m_buckets;  // Collision chains
     size_t _m_count;                    // Count of items in table
     float _m_max_load_factor;           // Max load factor
-    hasher_t _m_hasher;                 // Hasher functor
-    key_equal_t _m_key_equal;           // Key equal functor
-    allocator_t _m_allocator;           // Allocator for value_t
+    _hasher_t _m_hasher;                // Hasher functor
+    _key_equal_t _m_key_equal;          // Key equal functor
+    _allocator_t _m_allocator;          // Allocator for _value_t
 
     // Returns the load factor of the table if it had specified count elements
     float _load_factor(size_t _count) const noexcept
     { return _count / _m_buckets.size(); }
-
-    // Returns a pair where the first element is a iterator setting on the
-    // founded object in table, the second element is a iterator setting
-    // on the founded bucket in table
-    
-    std::pair<const_iterator, std::vector<_bucket_t>::const_iterator>
-    _find_item_by_key(const key_t& _key) const
-    {
-        size_t i = bucket(_key);
-        auto table_iter = _m_buckets.cbegin() + i;
-
-        for
-        (
-            auto buck_iter = _m_buckets[i].cbegin();
-            buck_iter != _m_buckets[i].cend();
-            buck_iter++;
-        )
-            if (_m_key_equal(_key, buck_iter->first))
-            {
-                return std::make_pair
-                (
-                    const_iterator(*this, table_iter, buck_iter),
-                    table_iter
-                );
-            }
-        
-        return std::make_pair(const_iterator(*this), table_iter);
-    }
-
-    std::pair<iterator, std::vector<_bucket_t>::iterator>
-    _find_item_by_key(const key_t& _key)
-    {
-        size_t i = bucket(_key);
-        auto table_iter = _m_buckets.begin() + i;
-
-        for
-        (
-            auto buck_iter = _m_buckets[i].begin();
-            buck_iter != _m_buckets[i].end();
-            buck_iter++;
-        )
-            if (_m_key_equal(_key, buck_iter->first))
-            {
-                return std::make_pair
-                (
-                    iterator(*this, table_iter, buck_iter),
-                    table_iter
-                );
-            }
-        
-        return std::make_pair(iterator(*this), table_iter);
-    }
 
 public:
     // Constructors and destructor
@@ -119,9 +72,9 @@ public:
     explicit HashTable
     (
         size_t _count_buckets = DEFAULT_COUNT_BUCKETS,
-        const hasher_t& _hasher = hasher_t(),
-        const key_equal_t& _key_equal = key_equal_t(),
-        const allocator_t& _allocator = allocator_t()
+        const _hasher_t& _hasher = _hasher_t(),
+        const _key_equal_t& _key_equal = _key_equal_t(),
+        const _allocator_t& _allocator = _allocator_t()
     ):
         _m_buckets{_count_buckets},
         _m_count{0},
@@ -132,13 +85,13 @@ public:
     {}
 
     // Constructor with the allocator parameter
-    explicit HashTable(const allocator_t& _alloc):
+    explicit HashTable(const _allocator_t& _alloc):
         _m_buckets{DEFAULT_COUNT_BUCKETS},
         _m_count{0},
         _m_max_load_factor{DEFAULT_MAX_LOAD_FACTOR},
-        _m_hasher{hasher_t()},
-        _m_key_equal{key_equal_t()},
-        _m_allocator{allocator_t()}
+        _m_hasher{_hasher_t()},
+        _m_key_equal{_key_equal_t()},
+        _m_allocator{_allocator_t()}
     {}
 
     // Range-based constructor
@@ -147,9 +100,9 @@ public:
     (
         const InputIterator& begin, const InputIterator& end,
         size_t _count_buckets = DEFAULT_COUNT_BUCKETS,
-        const hasher_t& _hasher = hasher_t(),
-        const key_equal_t& _key_equal = key_equal_t(),
-        const allocator_t& _allocator = allocator_t()
+        const _hasher_t& _hasher = _hasher_t(),
+        const _key_equal_t& _key_equal = _key_equal_t(),
+        const _allocator_t& _allocator = _allocator_t()
     ):
         _m_buckets{_count_buckets},
         _m_count{0},
@@ -158,7 +111,7 @@ public:
         _m_key_equal{_key_equal},
         _m_allocator{_allocator}
     {
-        void insert(begin, end);
+        insert(begin, end);
     }
 
     // Copy constructor
@@ -172,7 +125,7 @@ public:
     {}
 
     // Copy constuctor with allocator parameter
-    HashTable(const HashTable& _other, const allocator_t& _alloc):
+    HashTable(const HashTable& _other, const _allocator_t& _alloc):
         _m_buckets{_other._m_buckets},
         _m_count{_other._m_count},
         _m_max_load_factor{_other._m_max_load_factor},
@@ -192,7 +145,7 @@ public:
     {}
 
     // Move constuctor with allocator parameter
-    HashTable(HashTable&& _other, const allocator_t& _alloc):
+    HashTable(HashTable&& _other, const _allocator_t& _alloc):
         _m_buckets{std::move(_other._m_buckets)},
         _m_count{_other._m_count},
         _m_max_load_factor{_other._m_max_load_factor},
@@ -204,15 +157,15 @@ public:
     // Constructor based on the initialization list
     HashTable
     (
-        std::initializer_list<value_t> _il,
+        std::initializer_list<_value_t> _il,
         size_t _count_buckets = DEFAULT_COUNT_BUCKETS,
-        const hasher_t& _hasher = hasher_t(),
-        const key_equal_t& _key_equal = key_equal_t(),
-        const allocator_t& _allocator = allocator_t()
+        const _hasher_t& _hasher = _hasher_t(),
+        const _key_equal_t& _key_equal = _key_equal_t(),
+        const _allocator_t& _allocator = _allocator_t()
     ):
         _m_buckets{_count_buckets},
         _m_count{0},
-        _m_max_load_factor{_other._m_max_load_factor},
+        _m_max_load_factor{DEFAULT_MAX_LOAD_FACTOR},
         _m_hasher{_hasher},
         _m_key_equal{_key_equal},
         _m_allocator{_allocator}
@@ -257,7 +210,7 @@ public:
     }
 
     // Assignment based on the initialization list
-    HashTable& operator=(std::initializer_list<value_t> _il)
+    HashTable& operator=(std::initializer_list<_value_t> _il)
     {
         clear();
         insert(_il);
@@ -309,12 +262,9 @@ public:
 
     // Indexing operator
 
-    mapped_t& operator[](const key_t& _key)
+    _mapped_t& operator[](const _key_t& _key)
     {
-        std::pair<iterator, std::vector<_bucket_t>::iterator> find_result
-            = _find_item_by_key(_key);
-        iterator iter = find_result.first;
-        auto table_iter = find_result.second;
+        iterator iter = find(_key);
 
         // If an element with such a key was founded
         if (iter != end())
@@ -327,16 +277,14 @@ public:
         if (_load_factor(_m_count + 1) > max_load_factor)
             reverse(_m_count + 1);
 
-        table_iter->push_front(std::make_pair(_key, mapped_t{}));
+        _table_iterator table_iter = iter._m_table_iter;
+        table_iter->push_front(std::make_pair(_key, _mapped_t{}));
         _m_count++;
     }
 
-    mapped_t& operator[](key_t&& _key)
+    _mapped_t& operator[](_key_t&& _key)
     {
-        std::pair<iterator, std::vector<_bucket_t>::iterator> find_result
-            = _find_item_by_key(_key);
-        iterator iter = find_result.first;
-        auto table_iter = find_result.second;
+        iterator iter = find(_key);
 
         // If an element with such a key was founded, then return it
         if (iter != end())
@@ -349,14 +297,15 @@ public:
         if (_load_factor(_m_count + 1) > max_load_factor)
             reverse(_m_count + 1);
 
-        table_iter->push_front(std::make_pair(_key, mapped_t{}));
+        _table_iterator table_iter = iter._m_table_iter;
+        table_iter->push_front(std::make_pair(_key, _mapped_t{}));
         _m_count++;
     }
 
     // Access to the element by key, if the element is not found,
     // an out_of_range exception is thrown
     
-    mapped_t& at(const key_t& _key)
+    _mapped_t& at(const _key_t& _key)
     {
         iterator iter = find(_key);
 
@@ -366,7 +315,7 @@ public:
             throw std::out_of_range("the element with this key was not found");
     }
 
-    const mapped_t& at(const key_t& _key) const
+    const _mapped_t& at(const _key_t& _key) const
     {
         const_iterator iter = find(_key);
 
@@ -378,16 +327,44 @@ public:
 
     // Accessing an element by key and returning an iterator
 
-    iterator find(const key_T& _key)
-    { return _find_item_by_key(_key).first; }
+    iterator find(const _key_t& _key)
+    {
+        size_t i = bucket(_key);
+        _table_iterator table_iter = _m_buckets.begin() + i;
 
-    const_iterator find(const key_t& _key) const
-    { return _find_item_by_key(_key).first; }
+        for
+        (
+            bucket_iterator buck_iter = _m_buckets[i].begin();
+            buck_iter != _m_buckets[i].end();
+            buck_iter++
+        )
+            if (_m_key_equal(_key, buck_iter->first))
+                return iterator(*this, table_iter, buck_iter);
+        
+        return iterator(*this);
+    }
+
+    const_iterator find(const _key_t& _key) const
+    {
+        size_t i = bucket(_key);
+        _const_table_iterator table_iter = _m_buckets.cbegin() + i;
+
+        for
+        (
+            const_bucket_iterator buck_iter = _m_buckets[i].cbegin();
+            buck_iter != _m_buckets[i].cend();
+            buck_iter++
+        )
+            if (_m_key_equal(_key, buck_iter->first))
+                return const_iterator(*this, table_iter, buck_iter);
+        
+        return const_iterator(*this);
+    }
 
     // Returns count of items with specified key in table
     // (1 if there is such an element, 0 otherwise)
-    size_t count(const Key_T& _key) const
-    { return const_iterator(_key) == cend(); }
+    size_t count(const _key_t& _key) const
+    { return find(_key) != cend(); }
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -398,12 +375,10 @@ public:
     // Insert operations
 
     // Inserting a single element by copying
-    std::pair<iterator, bool> insert(const value_t& _val)
+    std::pair<iterator, bool> insert(const _value_t& _val)
     {
-        std::pair<iterator, std::vector<_bucket_t>::iterator> find_result
-            = _find_item_by_key(_val.first);
-        iterator iter = find_result.first;
-        auto table_iter = find_result.second;
+        iterator iter = find(_val.first);
+        _table_iterator table_iter = iter._m_table_iter;
 
         // If an element with such a key was founded
         if (iter != end())
@@ -421,12 +396,10 @@ public:
     }
 
     // Inserting a single element by moving
-    std::pair<iterator, bool> insert(value_t&& _val)
+    std::pair<iterator, bool> insert(_value_t&& _val)
     {
-        std::pair<iterator, std::vector<_bucket_t>::iterator> find_result
-            = _find_item_by_key(_val.first);
-        iterator iter = find_result.first;
-        auto table_iter = find_result.second;
+        iterator iter = find(_val.first);
+        _table_iterator table_iter = iter._m_table_iter;
 
         // If an element with such a key was founded
         if (iter != end())
@@ -453,7 +426,7 @@ public:
     }
 
     // Inserting an initialization list
-    void insert(initializer_list<value_t> _il)
+    void insert(std::initializer_list<_value_t> _il)
     {
         for (auto iter = _il.begin(); iter < _il.end(); iter++)
             if (!insert(*iter).second)
@@ -463,16 +436,14 @@ public:
     // Erase operations
 
     // Erase item from table by specified key
-    void erase(const key_t& _key)
+    void erase(const _key_t& _key)
     {
-        std::pair<iterator, std::vector<_bucket_t>::iterator> find_result
-            = _find_item_by_key(_val.first);
-        iterator iter = find_result.first;
-        auto table_iter = find_result.second;
-
+        iterator iter = find(_key);
+        _table_iterator table_iter = iter._m_table_iter;
+        
         table_iter->remove_if
         (
-            [_key, _m_key_equal, _m_count](const value_t& val) mutable
+            [&](const _value_t& val) mutable
             {
                 _m_count--;
                 return _m_key_equal(val.first, _key);
@@ -518,7 +489,7 @@ public:
     size_t bucket_size(size_t _n) const noexcept
     { return std::distance(_m_buckets[_n].cbegin(), _m_buckets[_n].cend()); }
     // Returns number of bucket by specified key
-    size_t bucket(const key_t& _key) const noexcept
+    size_t bucket(const _key_t& _key) const noexcept
     { return mul_hash(_m_hasher(_key), _m_buckets.size()); }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -548,9 +519,9 @@ public:
             // then the new number of buckets is at least:
             _count_buckets = _m_count / _m_max_load_factor;
         
-        std::vector<_bucket_t> new_buckets.resize(_count_buckets);
+        std::vector<_bucket_t> new_buckets(_count_buckets);
 
-        for (value_t& value : *this)
+        for (_value_t& value : *this)
         {
             size_t i = mul_hash(_m_hasher(value.first), _count_buckets);
             new_buckets[i].push_front(std::move(value));
@@ -572,17 +543,264 @@ public:
     ///////////////////////////////////////////////////////////////////////////
 
     // Returns the function used to hash the keys
-    hasher_t hash_function() const noexcept
+    _hasher_t hash_function() const noexcept
     { return _m_hasher; }
 
     // Returns the function used to compare keys for equality
-    key_equal_t key_eq() const noexcept
+    _key_equal_t key_eq() const noexcept
     { return _m_key_equal; }
 
     // Returns the using allocator
-    allocator_t get_allocator() const noexcept
+    _allocator_t get_allocator() const noexcept
     { return _m_allocator; }
 
+    ///////////////////////////////////////////////////////////////////////////
+
+
+    // Print operation
+    ///////////////////////////////////////////////////////////////////////////
+    std::ostream& operator<<(std::ostream& _stream)
+    {
+        size_t i = 0;
+        for (const auto& table_iter : _m_buckets)
+        {
+            _stream << "[" << i << "]: ";
+
+            size_t j = 0;
+            for (const auto& bucket_iter : table_iter)
+            {
+                _stream << "-> " << bucket_iter.fisrt <<
+                    "[" << bucket_iter.second << "] ";
+                j++;
+            }
+            _stream << std::endl;
+            
+            i++;
+        }
+        _stream << std::endl;
+
+        return _stream;
+    }
+    ///////////////////////////////////////////////////////////////////////////
+
+    // Iterator
+    class iterator:
+        public std::iterator<std::forward_iterator_tag, _value_t>
+    {
+    private:
+        HashTable* _m_ht_ptr;
+        _table_iterator _m_table_iter;
+        bucket_iterator _m_buck_iter;
+
+        // Default constructor
+        iterator(HashTable& _table):
+            _m_ht_ptr{&_table},
+            _m_table_iter{},
+            _m_buck_iter{}
+        {}
+
+        // Constructor with table iterator parameter
+        iterator(HashTable& _table, _table_iterator _iter):
+            _m_ht_ptr{&_table},
+            _m_table_iter{_iter}
+        {
+            if (_m_table_iter == _m_ht_ptr->end())
+                return;
+            
+            _m_buck_iter = _m_table_iter->begin();
+
+            while (_m_buck_iter == _m_table_iter->end())
+            {
+                _m_table_iter++;
+                
+                if (_m_table_iter != _m_ht_ptr->end())
+                    _m_buck_iter = _m_table_iter->begin();
+                else
+                    break;
+            }
+        }
+
+        // Constructor with table iterator and bucket iterator parameters
+        iterator
+        (
+            HashTable& _table,
+            _table_iterator _table_iter, bucket_iterator _buck_iter
+        ):
+            _m_ht_ptr{&_table},
+            _m_table_iter{_table_iter},
+            _m_buck_iter{_buck_iter}
+        {}
+    
+    public:
+        // Copy constructor
+        iterator(const iterator& _other) = default;
+        // Move constructor
+        iterator(iterator&& _other) = default;
+        // Destructor
+        ~iterator() {}
+
+        // Assignment by copying
+        iterator& operator=(const iterator& _other) = default;
+        // Assigment by moving
+        iterator& operator=(iterator&& _other) = default;
+
+        // Equality operator
+        bool operator==(const iterator& _other) const noexcept
+        {
+            return _m_ht_ptr == _other._m_ht_ptr &&
+                   _m_table_iter == _other._m_table_iter &&
+                   _m_buck_iter == _other._m_buck_iter;
+        }
+
+        // Inequality operator
+        bool operator!=(const iterator& _other) const noexcept
+        { return !(*this == _other); }
+
+        // Dereference Operator
+        _value_t& operator*() const noexcept
+        { return *_m_buck_iter; }
+
+        // Prefix increment operator
+        iterator& operator++()
+        {
+            if (_m_table_iter == _m_ht_ptr->end())
+                return *this;
+
+            _m_buck_iter++;
+
+            while (_m_buck_iter == _m_table_iter->end())
+            {
+                _m_table_iter++;
+                
+                if (_m_table_iter != _m_ht_ptr->end())
+                    _m_buck_iter = _m_table_iter->begin();
+                else
+                    break;
+            }
+
+            return *this;
+        }
+
+        // Postfix increment operator
+        iterator& operator++(int)
+        {
+            iterator temp = *this;
+            ++(*this);
+
+            return temp;
+        }
+
+    };
+    ///////////////////////////////////////////////////////////////////////////
+
+    // Const iterator
+    class const_iterator:
+        public std::iterator<std::forward_iterator_tag, _value_t>
+    {
+    private:
+        const HashTable* _m_ht_ptr;
+        _const_table_iterator _m_table_iter;
+        const_bucket_iterator _m_buck_iter;
+
+        // Default constructor
+        const_iterator(HashTable& _table):
+            _m_ht_ptr{&_table},
+            _m_table_iter{},
+            _m_buck_iter{}
+        {}
+
+        // Constructor with table iterator parameter
+        const_iterator(HashTable& _table, _table_iterator _iter):
+            _m_ht_ptr{&_table},
+            _m_table_iter{_iter}
+        {
+            if (_m_table_iter == _m_ht_ptr->cend())
+                return;
+            
+            _m_buck_iter = _m_table_iter->cbegin();
+
+            while (_m_buck_iter == _m_table_iter->cend())
+            {
+                _m_table_iter++;
+                
+                if (_m_table_iter != _m_ht_ptr->cend())
+                    _m_buck_iter = _m_table_iter->cbegin();
+                else
+                    break;
+            }
+        }
+
+        // Constructor with table iterator and bucket iterator parameters
+        const_iterator
+        (
+            HashTable& _table,
+            _table_iterator _table_iter, bucket_iterator _buck_iter
+        ):
+            _m_ht_ptr{&_table},
+            _m_table_iter{_table_iter},
+            _m_buck_iter{_buck_iter}
+        {}
+    
+    public:
+        // Copy constructor
+        const_iterator(const const_iterator& _other) = default;
+        // Move constructor
+        const_iterator(const_iterator&& _other) = default;
+        // Destructor
+        ~const_iterator() {}
+
+        // Assignment by copying
+        const_iterator& operator=(const const_iterator& _other) = default;
+        // Assigment by moving
+        const_iterator& operator=(const_iterator&& _other) = default;
+
+        // Equality operator
+        bool operator==(const const_iterator& _other) const noexcept
+        {
+            return _m_ht_ptr == _other._m_ht_ptr &&
+                   _m_table_iter == _other._m_table_iter &&
+                   _m_buck_iter == _other._m_buck_iter;
+        }
+
+        // Inequality operator
+        bool operator!=(const const_iterator& _other) const noexcept
+        { return !(*this == _other); }
+
+        // Dereference Operator
+        const _value_t& operator*() const noexcept
+        { return *_m_buck_iter; }
+
+        // Prefix increment operator
+        const_iterator& operator++()
+        {
+            if (_m_table_iter == _m_ht_ptr->cend())
+                return *this;
+
+            _m_buck_iter++;
+
+            while (_m_buck_iter == _m_table_iter->cend())
+            {
+                _m_table_iter++;
+                
+                if (_m_table_iter != _m_ht_ptr->cend())
+                    _m_buck_iter = _m_table_iter->cbegin();
+                else
+                    break;
+            }
+
+            return *this;
+        }
+
+        // Postfix increment operator
+        const_iterator& operator++(int)
+        {
+            const_iterator temp = *this;
+            ++(*this);
+
+            return temp;
+        }
+
+    };
     ///////////////////////////////////////////////////////////////////////////
 
 }; // HashTable
