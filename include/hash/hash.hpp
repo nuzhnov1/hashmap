@@ -117,4 +117,4 @@ struct hash<_Type, __hashable_types::VOID>
 };
 
 
-#endif
+#endif  // _HASH_

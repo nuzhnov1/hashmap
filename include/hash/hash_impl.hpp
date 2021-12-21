@@ -36,4 +36,4 @@ namespace __hash_impl
 }
 
 
-#endif
+#endif  // _HASH_IMPL_
