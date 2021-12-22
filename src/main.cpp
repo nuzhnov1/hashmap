@@ -10,7 +10,7 @@
 #include <ctime>
 #include <cstddef>
 
-#include <HashTable.hpp>
+#include <HashMap.hpp>
 
 
 // Returns an integer number from the stdin

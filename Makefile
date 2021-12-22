@@ -18,7 +18,7 @@ INCLUDE         := ./include
 SRC             := ./src
 
 # Varriables for program
-PROG_NAME   := hashtable
+PROG_NAME   := hashmap
 
 PROG_SRCS   := $(wildcard $(SRC)/*.cpp)
 PROG_OBJS   := $(patsubst $(SRC)/%.cpp,$(OBJ)/%.o,$(PROG_SRCS))
