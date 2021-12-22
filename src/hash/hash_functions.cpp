@@ -1,3 +1,5 @@
+// hash_functions.cpp
+
 #include <hash/hash_functions.hpp>
 
 
@@ -5,7 +7,7 @@ size_t mul_hash(size_t hash_val, size_t buckets_count)
 {
 	// The golden ratio
 	constexpr auto PHI = 0.61803398874989484820;
-	double frac = hash_val * PHI - static_cast<size_t>(hash_val * PHI);
+	double frac = hash_val * PHI - static_cast<unsigned int>(hash_val * PHI);
 
 	return static_cast<size_t>(buckets_count * frac);
 }

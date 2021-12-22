@@ -1,6 +1,5 @@
 // hash_bytes.cpp
 
-
 #include <hash/hash_bytes.hpp>
 
 
