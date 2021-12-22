@@ -57,7 +57,7 @@ clean:
 # Create "tar" target
 tar:
 	$(info Archiving the project...)
-	$(TAR) $(PROG_NAME).tar $(INCLUDE) $(SRC) Makefile
+	$(TAR) $(PROG_NAME).tar $(INCLUDE) $(SRC) Makefile README.md
 	$(info Project has archived. Archive file: $(PROG_NAME).tar)
 
 
