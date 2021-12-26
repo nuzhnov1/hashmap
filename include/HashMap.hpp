@@ -494,10 +494,6 @@ public:
             );
         }
 
-        // If the load factor is less than 25%, then reduce the container
-        if (_load_factor(_m_count) < _m_max_load_factor / 4)
-            reverse(_m_count * 2);
-
         return old_count - _m_count;
     }
 
@@ -565,6 +561,9 @@ public:
     {
         if (_count_buckets < MIN_COUNT_BUCKETS)
             _count_buckets = MIN_COUNT_BUCKETS;
+        
+        if (_count_buckets == _m_buckets.size())
+            return;
         
         // If the new number of buckets makes load factor more than maximum
         // load factor... 
@@ -654,7 +653,7 @@ public:
         {}
 
         // Constructor with table iterator parameter
-        iterator(HashMap& _table, _table_iterator _iter):
+        iterator(HashMap& _table, const _table_iterator& _iter):
             _m_ht_ptr{&_table},
             _m_table_iter{_iter}
         {
@@ -678,7 +677,8 @@ public:
         iterator
         (
             HashMap& _table,
-            _table_iterator _table_iter, bucket_iterator _buck_iter
+            const _table_iterator& _table_iter,
+            const bucket_iterator& _buck_iter
         ):
             _m_ht_ptr{&_table},
             _m_table_iter{_table_iter},
@@ -779,7 +779,11 @@ public:
         {}
 
         // Constructor with table iterator parameter
-        const_iterator(const HashMap& _table, _const_table_iterator _iter):
+        const_iterator
+        (
+            const HashMap& _table,
+            const _const_table_iterator& _iter
+        ):
             _m_ht_ptr{&_table},
             _m_table_iter{_iter}
         {
@@ -803,8 +807,8 @@ public:
         const_iterator
         (
             const HashMap& _table,
-            _const_table_iterator _table_iter,
-            const_bucket_iterator _buck_iter
+            const _const_table_iterator& _table_iter,
+            const const_bucket_iterator& _buck_iter
         ):
             _m_ht_ptr{&_table},
             _m_table_iter{_table_iter},
