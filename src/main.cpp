@@ -58,6 +58,8 @@ int main()
                 "than " << MAX_SIZE << "." << std::endl;
             size = get_int();
         }
+
+        map.reverse(size);
         for (size_t i = 0; i < size; i++)
             map.insert(std::make_pair(get_rand_string(), rand()));
 
@@ -72,25 +74,27 @@ int main()
         std::cout << "Program menu:" << std::endl;
         std::cout << "\t1: Get the number of elements.\n";
         std::cout << "\t2: Get the number of buckets.\n";
-        std::cout << "\t3: Get the current loading factor.\n";
-        std::cout << "\t4: Get the maximum loading factor.\n";
-        std::cout << "\t5: Set the maximum loading factor.\n";
-        std::cout << "\t6: Get an element by key.\n";
-        std::cout << "\t7: Set an element by key to new value.\n";
-        std::cout << "\t8: Checking the hash map for emptiness.\n";
-        std::cout << "\t9: Check the map item's accessories.\n";
-        std::cout << "\t10: Clear the container.\n";
-        std::cout << "\t11: Add an element to the hash map.\n";
-        std::cout << "\t12: Remove an element from the hash map.\n";
-        std::cout << "\t13: Set the number of buckets.\n";
-        std::cout << "\t14: Set new capacity.\n";
-        std::cout << "\t15: Print the hash map.\n";
-        std::cout << "\t16: Go to the control section \"Iterator\".\n";
-        std::cout << "\t17: Exit the program.\n";
+        std::cout << "\t3: Get the size of the bucket.\n";
+        std::cout << "\t4: Get the number of bucket by key.\n";
+        std::cout << "\t5: Get the current loading factor.\n";
+        std::cout << "\t6: Get the maximum loading factor.\n";
+        std::cout << "\t7: Set the maximum loading factor.\n";
+        std::cout << "\t8: Get an element by key.\n";
+        std::cout << "\t9: Set an element by key to new value.\n";
+        std::cout << "\t10: Checking the hash map for emptiness.\n";
+        std::cout << "\t11: Check the map item's accessories.\n";
+        std::cout << "\t12: Clear the container.\n";
+        std::cout << "\t13: Add an element to the hash map.\n";
+        std::cout << "\t14: Remove an element from the hash map.\n";
+        std::cout << "\t15: Set the number of buckets.\n";
+        std::cout << "\t16: Set new capacity.\n";
+        std::cout << "\t17: Print the hash map.\n";
+        std::cout << "\t18: Go to the control section \"Iterator\".\n";
+        std::cout << "\t19: Exit the program.\n";
 
         std::cout << "Select a menu item:\n";
         menu_item = get_int();
-        while (menu_item < 1 || menu_item > 17)
+        while (menu_item < 1 || menu_item > 19)
         {
             std::cout << "Error: this menu item does not exist." << std::endl;
             menu_item = get_int();
@@ -111,22 +115,45 @@ int main()
                 << ".\n";
             break;
         }
-
         case 3:
+        {
+            std::cout << "Enter the bucket number:\n";
+            size_t bucket = get_int();
+
+            if (bucket >= map.buckets_count())
+                std::cout << "Error: index of bucket out of range.\n";
+            else
+                std::cout << "Size of specified bucket: " <<
+                    map.bucket_size(bucket) << ".\n";
+            
+            break;
+        }
+
+        case 4:
+        {
+            std::cout << "Enter the key:\n";
+            std::string key = get_string();
+
+            std::cout << "Bucket number: " << map.bucket(key) << ".\n";
+            
+            break;
+        }
+
+        case 5:
         {
             std::cout << "Current loading factor: " << map.load_factor()
                 << ".\n";
             break;
         }
 
-        case 4:
+        case 6:
         {
             std::cout << "Maximum loading factor: " << map.max_load_factor()
                 << ".\n";
             break;
         }
 
-        case 5:
+        case 7:
         {
             std::cout << "Enter the maximum hash table load factor:\n";
             max_load_factor = get_float();
@@ -142,7 +169,7 @@ int main()
             break;
         }
 
-        case 6:
+        case 8:
         {
             std::cout << "Enter the key:\n";
             std::string key = get_string();
@@ -160,7 +187,7 @@ int main()
             break;
         }
 
-        case 7:
+        case 9:
         {
             std::cout << "Enter the key:\n";
             std::string key = get_string();
@@ -180,7 +207,7 @@ int main()
             break;
         }
 
-        case 8:
+        case 10:
         {
             if (!map.empty())
                 std::cout << "The hash map is not empty.\n";
@@ -190,7 +217,7 @@ int main()
             break;
         }
 
-        case 9:
+        case 11:
         {
             std::cout << "Enter the key:\n";
             std::string key = get_string();
@@ -203,7 +230,7 @@ int main()
             break;
         }
 
-        case 10:
+        case 12:
         {
             map.clear();
             std::cout << "Hash map cleared.\n";
@@ -211,7 +238,7 @@ int main()
             break;
         }
 
-        case 11:
+        case 13:
         {
             if (map.size() + 1 > MAX_SIZE)
             {
@@ -238,7 +265,7 @@ int main()
             break;
         }
 
-        case 12:
+        case 14:
         {
             std::cout << "Enter the key:\n";
             std::string key = get_string();
@@ -252,7 +279,7 @@ int main()
             break;
         }
 
-        case 13:
+        case 15:
         {
             std::cout << "Enter the number of buckets:\n";
             size_t buckets_count = get_int();
@@ -269,7 +296,7 @@ int main()
             break;
         }
 
-        case 14:
+        case 16:
         {
             std::cout << "Enter the value of capacity:\n";
             size_t capacity = get_int();
@@ -286,7 +313,7 @@ int main()
             break;
         }
 
-        case 15:
+        case 17:
         {
             std::cout << "Hash map:" << std::endl;
             map.print(std::cout);
@@ -294,7 +321,7 @@ int main()
             
             break;
         }
-        case 16:
+        case 18:
         {
             HashMap<std::string, int>::iterator iter = map.begin();
 
@@ -416,7 +443,7 @@ int main()
             break;
         }
 
-        case 17:
+        case 19:
         {
             std::cout << "Exit the program..." << std::endl;
             isExit = true;
