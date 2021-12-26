@@ -486,10 +486,15 @@ public:
         {
             (*table_iter).remove_if
             (
-                [&](const _value_t& val) mutable
+                [this, &_key](const _value_t& val) -> bool
                 {
-                    _m_count--;
-                    return _m_key_equal(val.first, _key);
+                    if (_m_key_equal(val.first, _key))
+                    {
+                        _m_count--;
+                        return true;
+                    }
+
+                    return false;
                 }
             );
         }
