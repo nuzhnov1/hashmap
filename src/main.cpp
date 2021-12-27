@@ -91,7 +91,6 @@ int main()
             std::cout << "Error: this menu item does not exist." << std::endl;
             menu_item = get_int();
         }
-        std::cout << std::endl;
 
         switch (menu_item)
         {
@@ -366,7 +365,6 @@ int main()
                     std::cout << "Error: this menu item does not exist.\n";
                     menu_item = get_int();
                 }
-                std::cout << std::endl;
 
                 switch (menu_item)
                 {
