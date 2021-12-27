@@ -504,6 +504,10 @@ public:
     void clear()
     {
         _m_buckets.resize(MIN_COUNT_BUCKETS);
+
+        for (auto& bucket : _m_buckets)
+            bucket.clear();
+
         _m_count = 0;
     }
 
