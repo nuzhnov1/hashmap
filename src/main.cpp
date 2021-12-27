@@ -1,6 +1,7 @@
 ﻿// main.cpp
 
 #include <iostream>
+#include <ostream>
 #include <string>
 #include <vector>
 #include <utility>
@@ -13,6 +14,12 @@
 #include <HashMap.hpp>
 
 
+// The type alias used for the hash table
+using UnorderedMap = HashMap<std::string, int>;
+
+
+// Overloaded output operator for hash table
+std::ostream& operator<<(std::ostream& _stream, const UnorderedMap& _map);
 // Returns an integer number from the stdin
 int get_int();
 // Returns a float number from the stdin
@@ -27,7 +34,7 @@ int main()
 {
     constexpr unsigned short MAX_SIZE = 1024; // Number of maximum items in map
 
-    HashMap<std::string, int> map;  // Using hash map
+    UnorderedMap map;               // Using hash map
     size_t size = 0;                // Size of hash map
     float max_load_factor = 0.0f;   // Maximum load factor of hash map
     int menu_item = 0;                  
@@ -316,14 +323,13 @@ int main()
         case 17:
         {
             std::cout << "Hash map:" << std::endl;
-            map.print(std::cout);
-            std::cout << std::endl;
+            std::cout << map << std::endl;
             
             break;
         }
         case 18:
         {
-            HashMap<std::string, int>::iterator iter = map.begin();
+            UnorderedMap::iterator iter = map.begin();
 
             std::cout << "Section \"Iterator\":\n\n";
 
@@ -457,6 +463,33 @@ int main()
 
     return 0;
 }
+
+
+std::ostream& operator<<(std::ostream& _stream, const UnorderedMap& _map)
+{
+    _stream << "[i] -> ... -> key{value} -> ..." << std::endl;
+
+    for (size_t bucket = 0; bucket < _map.buckets_count(); bucket++)
+    {
+        _stream << "[" << bucket << "]: ";
+
+        for
+        (
+            auto buck_iter = _map.cbegin(bucket), end = _map.cend(bucket);
+            buck_iter != end;
+            buck_iter++
+        )
+        {
+            _stream << "-> " << (*buck_iter).first << "{"
+                << (*buck_iter).second << "} ";
+        }
+
+        _stream << std::endl;
+    }
+
+    return _stream;
+}
+
 
 int get_int()
 {

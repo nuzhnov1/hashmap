@@ -4,8 +4,6 @@
 #define _HASHMAP_
 
 
-#include <iostream>
-#include <ostream>
 #include <vector>
 #include <forward_list>
 #include <initializer_list>
@@ -519,19 +517,19 @@ public:
     bucket_iterator begin(size_t _n) noexcept
     { return _m_buckets[_n].begin(); }
     // Returns the const iterator set to the begining of the specified bucket
-    const_iterator begin(size_t _n) const noexcept
+    const_bucket_iterator begin(size_t _n) const noexcept
     { return _m_buckets[_n].cbegin(); }
     // Returns the const iterator set to the begining of the specified bucket
-    const_iterator cbegin(size_t _n) const noexcept
+    const_bucket_iterator cbegin(size_t _n) const noexcept
     { return _m_buckets[_n].cbegin(); }
     // Returns the iterator set to the end of the specified bucket
-    iterator end(size_t _n) noexcept
+    bucket_iterator end(size_t _n) noexcept
     { return _m_buckets[_n].end(); }
     // Returns the const iterator set to the end of the specified bucket
-    const_iterator end(size_t _n) const noexcept
+    const_bucket_iterator end(size_t _n) const noexcept
     { return _m_buckets[_n].cend(); }
     // Returns the const iterator set to the end of the specified bucket
-    const_iterator cend(size_t _n) const noexcept
+    const_bucket_iterator cend(size_t _n) const noexcept
     { return _m_buckets[_n].cend(); }
 
     // Returns count of buckets in container
@@ -613,30 +611,6 @@ public:
 
     ///////////////////////////////////////////////////////////////////////////
 
-
-    // Print operation
-    ///////////////////////////////////////////////////////////////////////////
-    void print(std::ostream& _stream) const noexcept
-    {
-        _stream << "[i] -> ... -> key{value} -> ..." << std::endl;
-
-        size_t i = 0;
-        for (const auto& bucket : _m_buckets)
-        {
-            _stream << "[" << i << "]: ";
-
-            size_t j = 0;
-            for (const auto& item : bucket)
-            {
-                _stream << "-> " << item.first << "{" << item.second << "} ";
-                j++;
-            }
-            _stream << std::endl;
-            
-            i++;
-        }
-    }
-    ///////////////////////////////////////////////////////////////////////////
 
     // Iterator
     class iterator:
