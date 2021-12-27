@@ -18,6 +18,10 @@
 using UnorderedMap = HashMap<std::string, int>;
 
 
+// Printing main menu
+void print_main_menu();
+// Printing iterator menu
+void print_iterator_menu();
 // Overloaded output operator for hash table
 std::ostream& operator<<(std::ostream& _stream, const UnorderedMap& _map);
 // Returns an integer number from the stdin
@@ -75,33 +79,14 @@ int main()
     }
     std::cout << "Hash map created.\n\n";
 
+    print_main_menu();
+
     bool isExit = false;
     while (!isExit)
     {
-        std::cout << "Program menu:" << std::endl;
-        std::cout << "\t1: Get the number of elements.\n";
-        std::cout << "\t2: Get the number of buckets.\n";
-        std::cout << "\t3: Get the size of the bucket.\n";
-        std::cout << "\t4: Get the number of bucket by key.\n";
-        std::cout << "\t5: Get the current loading factor.\n";
-        std::cout << "\t6: Get the maximum loading factor.\n";
-        std::cout << "\t7: Set the maximum loading factor.\n";
-        std::cout << "\t8: Get an element by key.\n";
-        std::cout << "\t9: Set an element by key to new value.\n";
-        std::cout << "\t10: Checking the hash map for emptiness.\n";
-        std::cout << "\t11: Check the map item's accessories.\n";
-        std::cout << "\t12: Clear the container.\n";
-        std::cout << "\t13: Add an element to the hash map.\n";
-        std::cout << "\t14: Remove an element from the hash map.\n";
-        std::cout << "\t15: Set the number of buckets.\n";
-        std::cout << "\t16: Set new capacity.\n";
-        std::cout << "\t17: Print the hash map.\n";
-        std::cout << "\t18: Go to the control section \"Iterator\".\n";
-        std::cout << "\t19: Exit the program.\n";
-
         std::cout << "Select a menu item:\n";
         menu_item = get_int();
-        while (menu_item < 1 || menu_item > 19)
+        while (menu_item < 1 || menu_item > 20)
         {
             std::cout << "Error: this menu item does not exist." << std::endl;
             menu_item = get_int();
@@ -112,17 +97,23 @@ int main()
         {
         case 1:
         {
-            std::cout << "Number of elements: " << map.size() << ".\n";
+            print_main_menu();
             break;
         }
 
         case 2:
         {
+            std::cout << "Number of elements: " << map.size() << ".\n";
+            break;
+        }
+
+        case 3:
+        {
             std::cout << "Number of buckets: " << map.buckets_count()
                 << ".\n";
             break;
         }
-        case 3:
+        case 4:
         {
             std::cout << "Enter the bucket number:\n";
             size_t bucket = get_int();
@@ -136,7 +127,7 @@ int main()
             break;
         }
 
-        case 4:
+        case 5:
         {
             std::cout << "Enter the key:\n";
             std::string key = get_string();
@@ -146,21 +137,21 @@ int main()
             break;
         }
 
-        case 5:
+        case 6:
         {
             std::cout << "Current loading factor: " << map.load_factor()
                 << ".\n";
             break;
         }
 
-        case 6:
+        case 7:
         {
             std::cout << "Maximum loading factor: " << map.max_load_factor()
                 << ".\n";
             break;
         }
 
-        case 7:
+        case 8:
         {
             std::cout << "Enter the maximum hash table load factor:\n";
             max_load_factor = get_float();
@@ -176,7 +167,7 @@ int main()
             break;
         }
 
-        case 8:
+        case 9:
         {
             std::cout << "Enter the key:\n";
             std::string key = get_string();
@@ -194,7 +185,7 @@ int main()
             break;
         }
 
-        case 9:
+        case 10:
         {
             std::cout << "Enter the key:\n";
             std::string key = get_string();
@@ -214,7 +205,7 @@ int main()
             break;
         }
 
-        case 10:
+        case 11:
         {
             if (!map.empty())
                 std::cout << "The hash map is not empty.\n";
@@ -224,7 +215,7 @@ int main()
             break;
         }
 
-        case 11:
+        case 12:
         {
             std::cout << "Enter the key:\n";
             std::string key = get_string();
@@ -237,7 +228,7 @@ int main()
             break;
         }
 
-        case 12:
+        case 13:
         {
             map.clear();
             std::cout << "Hash map cleared.\n";
@@ -245,7 +236,7 @@ int main()
             break;
         }
 
-        case 13:
+        case 14:
         {
             if (map.size() + 1 > MAX_SIZE)
             {
@@ -272,7 +263,7 @@ int main()
             break;
         }
 
-        case 14:
+        case 15:
         {
             std::cout << "Enter the key:\n";
             std::string key = get_string();
@@ -286,7 +277,7 @@ int main()
             break;
         }
 
-        case 15:
+        case 16:
         {
             std::cout << "Enter the number of buckets:\n";
             size_t buckets_count = get_int();
@@ -303,7 +294,7 @@ int main()
             break;
         }
 
-        case 16:
+        case 17:
         {
             std::cout << "Enter the value of capacity:\n";
             size_t capacity = get_int();
@@ -320,14 +311,14 @@ int main()
             break;
         }
 
-        case 17:
+        case 18:
         {
             std::cout << "Hash map:" << std::endl;
             std::cout << map << std::endl;
             
             break;
         }
-        case 18:
+        case 19:
         {
             UnorderedMap::iterator iter = map.begin();
 
@@ -363,18 +354,14 @@ int main()
             }
             std::cout << "Iterator created.\n\n";
 
+            print_iterator_menu();
+
             bool isExit = false;
             while (!isExit)
             {
-                std::cout << "Menu \"Iterator\":\n";
-                std::cout << "\t1: Set to an element by key.\n";
-                std::cout << "\t2: Dereference iterator.\n";
-                std::cout << "\t3: Increment iterator.\n";
-                std::cout << "\t4: Exit this section.\n";
-
                 std::cout << "Select a menu item:\n";
                 menu_item = get_int();
-                while (menu_item < 1 || menu_item > 4)
+                while (menu_item < 1 || menu_item > 5)
                 {
                     std::cout << "Error: this menu item does not exist.\n";
                     menu_item = get_int();
@@ -384,6 +371,12 @@ int main()
                 switch (menu_item)
                 {
                 case 1:
+                {
+                    print_iterator_menu();
+                    break;
+                }
+
+                case 2:
                 {
                     std::cout << "Enter the key:\n";
                     std::string key = get_string();
@@ -401,7 +394,7 @@ int main()
                     break;
                 }
 
-                case 2:
+                case 3:
                 {
                     if (iter != map.end())
                     {
@@ -416,7 +409,7 @@ int main()
                     break;
                 }
 
-                case 3:
+                case 4:
                 {
                     iter++;
                         
@@ -434,7 +427,7 @@ int main()
                     break;
                 }
 
-                case 4:
+                case 5:
                 {
                     std::cout << "Exit from this section...\n";
                     isExit = true;
@@ -449,7 +442,7 @@ int main()
             break;
         }
 
-        case 19:
+        case 20:
         {
             std::cout << "Exit the program..." << std::endl;
             isExit = true;
@@ -464,6 +457,41 @@ int main()
     return 0;
 }
 
+
+void print_main_menu()
+{
+    std::cout << "Program menu:" << std::endl;
+    std::cout << "\t1: Print this menu.\n";
+    std::cout << "\t2: Get the number of elements.\n";
+    std::cout << "\t3: Get the number of buckets.\n";
+    std::cout << "\t4: Get the size of the bucket.\n";
+    std::cout << "\t5: Get the number of bucket by key.\n";
+    std::cout << "\t6: Get the current loading factor.\n";
+    std::cout << "\t7: Get the maximum loading factor.\n";
+    std::cout << "\t8: Set the maximum loading factor.\n";
+    std::cout << "\t9: Get an element by key.\n";
+    std::cout << "\t10: Set an element by key to new value.\n";
+    std::cout << "\t11: Checking the hash map for emptiness.\n";
+    std::cout << "\t12: Check the map item's accessories.\n";
+    std::cout << "\t13: Clear the container.\n";
+    std::cout << "\t14: Add an element to the hash map.\n";
+    std::cout << "\t15: Remove an element from the hash map.\n";
+    std::cout << "\t16: Set the number of buckets.\n";
+    std::cout << "\t17: Set new capacity.\n";
+    std::cout << "\t18: Print the hash map.\n";
+    std::cout << "\t19: Go to the control section \"Iterator\".\n";
+    std::cout << "\t20: Exit the program.\n";
+}
+
+void print_iterator_menu()
+{
+    std::cout << "Menu \"Iterator\":\n";
+    std::cout << "\t1: Print this menu.\n";
+    std::cout << "\t2: Set to an element by key.\n";
+    std::cout << "\t3: Dereference iterator.\n";
+    std::cout << "\t4: Increment iterator.\n";
+    std::cout << "\t5: Exit this section.\n";
+}
 
 std::ostream& operator<<(std::ostream& _stream, const UnorderedMap& _map)
 {
